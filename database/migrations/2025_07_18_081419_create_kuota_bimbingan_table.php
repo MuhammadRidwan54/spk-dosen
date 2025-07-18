@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kuota_bimbingan', function (Blueprint $table) {
             $table->id();
             $table->string('kategori');
-            // $table->string('range'); // "0-5", "6-10", ">10"
+            $table->string('range'); // "0-5", "6-10", ">10"
             $table->integer('score'); // 0-5=3, 6-10=2, >10=1
             $table->timestamps();
         });

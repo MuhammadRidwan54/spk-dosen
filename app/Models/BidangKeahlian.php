@@ -11,5 +11,12 @@ class BidangKeahlian extends Model
 
     protected $table = 'bidang_keahlian';
     protected $primaryKey = 'id_bidang_keahlian';
+    
     protected $fillable = ['bidang'];
+
+    // Relasi many-to-many dengan dosen
+    public function dosens()
+    {
+        return $this->belongsToMany(Dosen::class, 'dosen_bidang_keahlian', 'bidang_keahlian_id', 'dosen_id');
+    }
 }

@@ -18,6 +18,11 @@ return new class extends Migration
             $table->foreignId('pendidikan_terakhir_id')->constrained('pendidikan_terakhir');
             $table->foreignId('jabatan_fungsional_id')->constrained('jabatan_fungsional');
             $table->foreignId('kuota_bimbingan_id')->constrained('kuota_bimbingan');
+            // Perbaikan di sini:
+            $table->unsignedBigInteger('minat_id');
+            $table->foreign('minat_id')
+                ->references('id_minat')
+                ->on('minat');
             $table->timestamps();
         });
     }

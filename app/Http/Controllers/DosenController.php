@@ -6,6 +6,8 @@ use App\Models\Dosen;
 use App\Models\PendidikanTerakhir;
 use App\Models\JabatanFungsional;
 use App\Models\KuotaBimbingan;
+use App\Models\BidangKeahlian;
+use App\Models\Minat;
 use Illuminate\Http\Request;
 
 class DosenController extends Controller
@@ -15,15 +17,23 @@ class DosenController extends Controller
      */
     public function index()
     {
-        $dosen = Dosen::with(['pendidikanTerakhir', 'jabatanFungsional', 'kuotaBimbingan'])
-                    ->orderBy('nama')
-                    ->get();
+        $dosen = Dosen::with([
+                'pendidikanTerakhir', 
+                'jabatanFungsional', 
+                'kuotaBimbingan',
+                'bidangKeahlian',
+                'minat'
+            ])
+            ->orderBy('nama')
+            ->get();
         
         $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
         $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
         $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        $bidangKeahlian = BidangKeahlian::all();
+        $minat = Minat::all();
         
-        return view('dosen.index', compact('dosen', 'pendidikan', 'jabatan', 'kuota'));
+        return view('dosen.index', compact('dosen', 'pendidikan', 'jabatan', 'kuota', 'bidangKeahlian', 'minat'));
     }
 
     /**
@@ -34,8 +44,10 @@ class DosenController extends Controller
         $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
         $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
         $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        $bidangKeahlian = BidangKeahlian::all();
+        $minat = Minat::all();
         
-        return view('dosen.create', compact('pendidikan', 'jabatan', 'kuota'));
+        return view('dosen.create', compact('pendidikan', 'jabatan', 'kuota', 'bidangKeahlian', 'minat'));
     }
 
     /**
@@ -48,7 +60,9 @@ class DosenController extends Controller
             'nik' => 'required|string|unique:dosen,nik',
             'pendidikan_terakhir_id' => 'required|exists:pendidikan_terakhir,id',
             'jabatan_fungsional_id' => 'required|exists:jabatan_fungsional,id',
-            'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id'
+            'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id',
+            'bidang_keahlian_id' => 'required|exists:bidang_keahlian,id',
+            'minat_id' => 'required|exists:minat,id'
         ]);
 
         Dosen::create($validated);
@@ -73,8 +87,10 @@ class DosenController extends Controller
         $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
         $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
         $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        $bidangKeahlian = BidangKeahlian::all();
+        $minat = Minat::all();
         
-        return view('dosen.edit', compact('dosen', 'pendidikan', 'jabatan', 'kuota'));
+        return view('dosen.edit', compact('dosen', 'pendidikan', 'jabatan', 'kuota', 'bidangKeahlian', 'minat'));
     }
 
     /**
@@ -87,7 +103,9 @@ class DosenController extends Controller
             'nik' => 'required|string|unique:dosen,nik,' . $dosen->id_dosen . ',id_dosen',
             'pendidikan_terakhir_id' => 'required|exists:pendidikan_terakhir,id',
             'jabatan_fungsional_id' => 'required|exists:jabatan_fungsional,id',
-            'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id'
+            'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id',
+            'bidang_keahlian_id' => 'required|exists:bidang_keahlian,id',
+            'minat_id' => 'required|exists:minat,id'
         ]);
 
         $dosen->update($validated);

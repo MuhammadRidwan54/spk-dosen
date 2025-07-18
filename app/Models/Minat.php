@@ -12,4 +12,10 @@ class Minat extends Model
     protected $table = 'minat';
     protected $primaryKey = 'id_minat';
     protected $fillable = ['nama'];
+
+    // Relasi many-to-many dengan dosen
+    public function dosens()
+    {
+        return $this->belongsToMany(Dosen::class, 'dosen_minat', 'minat_id', 'dosen_id');
+    }
 }
