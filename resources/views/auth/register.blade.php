@@ -46,7 +46,7 @@
             </div>
         @endif
 
-        <form action="{{ route('auth.store') }}" method="POST">
+        <form action="{{ route('register.post') }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="name">Name:</label>

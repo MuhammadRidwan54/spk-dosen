@@ -22,16 +22,16 @@ use App\Http\Controllers\PendidikanTerakhirController;
 */
 
 // Redirect root to login
-Route::redirect('/', '/login')->name('auth.login');
+Route::redirect('/', '/login');
 
 // Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     // Guest-only routes
     Route::middleware('guest')->group(function () {
-        Route::get('/login', 'login')->name('login');
-        Route::post('/login', 'authenticate')->name('login.attempt');
-        Route::get('/register', 'register')->name('register');
-        Route::post('/register', 'store')->name('register.store');
+        Route::get('/login', 'showLoginForm')->name('login');
+        Route::post('/login', 'login')->name('login.post');  // Changed from 'login.attempt'
+        Route::get('/register', 'showRegisterForm')->name('register');
+        Route::post('/register', 'register')->name('register.post');  // Changed from 'register.store'
     });
 
     // Authenticated-only route

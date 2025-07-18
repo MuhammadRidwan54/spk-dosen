@@ -34,8 +34,7 @@
             </div>
         @endif
 
-
-        <form action="{{ route('auth.authenticate') }}" method="POST">
+        <form action="{{ route('login.post') }}" method="POST">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="email">Email:</label><br>
@@ -47,6 +46,11 @@
                 <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password" required 
                        style="width: 100%; padding: 8px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
             </div>
 
             <div>
