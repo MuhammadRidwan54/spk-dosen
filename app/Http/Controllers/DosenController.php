@@ -15,8 +15,15 @@ class DosenController extends Controller
      */
     public function index()
     {
-        $dosen = Dosen::with(['pendidikanTerakhir', 'jabatanFungsional', 'kuotaBimbingan'])->get();
-        return view('dosen.index', compact('dosen'));
+        $dosen = Dosen::with(['pendidikanTerakhir', 'jabatanFungsional', 'kuotaBimbingan'])
+                    ->orderBy('nama')
+                    ->get();
+        
+        $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
+        $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
+        $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        
+        return view('dosen.index', compact('dosen', 'pendidikan', 'jabatan', 'kuota'));
     }
 
     /**
@@ -24,9 +31,10 @@ class DosenController extends Controller
      */
     public function create()
     {
-        $pendidikan = PendidikanTerakhir::all();
-        $jabatan = JabatanFungsional::all();
-        $kuota = KuotaBimbingan::all();
+        $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
+        $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
+        $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        
         return view('dosen.create', compact('pendidikan', 'jabatan', 'kuota'));
     }
 
@@ -35,7 +43,7 @@ class DosenController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|unique:dosen,nik',
             'pendidikan_terakhir_id' => 'required|exists:pendidikan_terakhir,id',
@@ -43,7 +51,8 @@ class DosenController extends Controller
             'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id'
         ]);
 
-        Dosen::create($request->all());
+        Dosen::create($validated);
+        
         return redirect()->route('dosen.index')
             ->with('success', 'Data dosen berhasil ditambahkan.');
     }
@@ -51,9 +60,9 @@ class DosenController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Dosen $dosen)
     {
-        //
+        return view('dosen.show', compact('dosen'));
     }
 
     /**
@@ -61,9 +70,10 @@ class DosenController extends Controller
      */
     public function edit(Dosen $dosen)
     {
-        $pendidikan = PendidikanTerakhir::all();
-        $jabatan = JabatanFungsional::all();
-        $kuota = KuotaBimbingan::all();
+        $pendidikan = PendidikanTerakhir::orderBy('score', 'desc')->get();
+        $jabatan = JabatanFungsional::orderBy('score', 'desc')->get();
+        $kuota = KuotaBimbingan::orderBy('score', 'desc')->get();
+        
         return view('dosen.edit', compact('dosen', 'pendidikan', 'jabatan', 'kuota'));
     }
 
@@ -72,7 +82,7 @@ class DosenController extends Controller
      */
     public function update(Request $request, Dosen $dosen)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|unique:dosen,nik,' . $dosen->id_dosen . ',id_dosen',
             'pendidikan_terakhir_id' => 'required|exists:pendidikan_terakhir,id',
@@ -80,7 +90,8 @@ class DosenController extends Controller
             'kuota_bimbingan_id' => 'required|exists:kuota_bimbingan,id'
         ]);
 
-        $dosen->update($request->all());
+        $dosen->update($validated);
+        
         return redirect()->route('dosen.index')
             ->with('success', 'Data dosen berhasil diperbarui.');
     }
@@ -91,6 +102,7 @@ class DosenController extends Controller
     public function destroy(Dosen $dosen)
     {
         $dosen->delete();
+        
         return redirect()->route('dosen.index')
             ->with('success', 'Data dosen berhasil dihapus.');
     }

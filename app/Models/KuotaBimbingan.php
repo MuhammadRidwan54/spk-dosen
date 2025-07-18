@@ -10,5 +10,20 @@ class KuotaBimbingan extends Model
     use HasFactory;
 
     protected $table = 'kuota_bimbingan';
-    protected $fillable = ['kategori', 'range', 'score'];
+    protected $primaryKey = 'id';
+    
+    protected $fillable = [
+        'kategori',
+        'range',
+        'score'
+    ];
+
+    protected $casts = [
+        'score' => 'integer',
+    ];
+
+    public function dosen()
+    {
+        return $this->hasMany(Dosen::class, 'kuota_bimbingan_id');
+    }
 }

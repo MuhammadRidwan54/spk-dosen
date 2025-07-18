@@ -10,5 +10,19 @@ class PendidikanTerakhir extends Model
     use HasFactory;
 
     protected $table = 'pendidikan_terakhir';
-    protected $fillable = ['pendidikan', 'score'];
+    protected $primaryKey = 'id';
+    
+    protected $fillable = [
+        'pendidikan',
+        'score'
+    ];
+
+    protected $casts = [
+        'score' => 'integer',
+    ];
+
+    public function dosen()
+    {
+        return $this->hasMany(Dosen::class, 'pendidikan_terakhir_id');
+    }
 }
